@@ -1289,20 +1289,53 @@
                 if ($(opt.container).css('position') == 'relative') {
                     var containerOffset = $(opt.container).offset();
                     var leftIndent = Math.max(0, offset.left + box.outerWidth() - $('body').width() + 16);
-                    box.css({
-                        top: offset.top - containerOffset.top + $(self).outerHeight() + 4,
-                        left: offset.left - containerOffset.left - leftIndent
-                    });
+                    if( opt.smartOpen ){
+                        var window_height = $(window).height();
+                        var scroll_top = $(window).scrollTop();
+
+                        if( offset.top - containerOffset.top + $( self ).outerHeight() > window_height + scroll_top ){
+                            box.css( {
+                                top : offset.top - containerOffset.top - $( self ).outerHeight() - 4,
+                                left: offset.left - containerOffset.left - leftIndent
+                            } );
+                        }else{
+                            box.css( {
+                                top : offset.top - containerOffset.top + $( self ).outerHeight() + 4,
+                                left: offset.left - containerOffset.left - leftIndent
+                            } );
+                        }
+                    }else{
+                        box.css( {
+                            top : offset.top - containerOffset.top + $( self ).outerHeight() + 4,
+                            left: offset.left - containerOffset.left - leftIndent
+                        } );
+                    }
                 } else {
+                    var top;
+                    if( opt.smartOpen ){
+                        var window_height = $(window).height();
+                        var scroll_top = $(window).scrollTop();
+                        var style = box.attr( 'style' );
+                        box.removeAttr( 'style' );
+                        if( offset.top + $(self).outerHeight() + box.outerHeight() > window_height + scroll_top ){
+                            top = offset.top - box.outerHeight() + parseInt($('body').css('border-top') || 0, 10);
+                        }else{
+                            top = offset.top + $(self).outerHeight() + parseInt($('body').css('border-top') || 0, 10);
+                        }
+                        box.attr( 'style', style );
+                    }else{
+                        top = offset.top + $(self).outerHeight() + parseInt($('body').css('border-top') || 0, 10);
+                    }
+
                     if (offset.left < 460) //left to right
                     {
                         box.css({
-                            top: offset.top + $(self).outerHeight() + parseInt($('body').css('border-top') || 0, 10),
+                            top: top,
                             left: offset.left
                         });
                     } else {
                         box.css({
-                            top: offset.top + $(self).outerHeight() + parseInt($('body').css('border-top') || 0, 10),
+                            top: top,
                             left: offset.left + $(self).width() - box.width() - 16
                         });
                     }

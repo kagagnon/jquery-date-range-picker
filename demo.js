@@ -515,4 +515,11 @@ $(function()
         startDate: moment().subtract(3, 'months').format('YYYY-MM-DD'),
         endDate: moment().endOf('day').format('YYYY-MM-DD'),
 	});
+
+
+
+	$('#date-range56').dateRangePicker(
+		{
+			smartOpen: true,
+		});
 });
